@@ -169,7 +169,7 @@ var Engine = (function(global) {
 
 		//move enemies back to starting position
 		allEnemies.forEach(function(enemy) {
-			enemy.x = -150;
+			enemy.x = enemy.startPosX;
 			enemy.y = enemy.row * 83 - 20;
 		});
 
