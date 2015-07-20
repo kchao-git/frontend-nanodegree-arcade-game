@@ -80,7 +80,10 @@ var Engine = (function(global) {
 	*/
 	function update(dt) {
 		updateEntities(dt);
-		// checkCollisions();
+		checkCollisions();
+		if(game_reset){
+			reset();
+		}
 	}
 
 	/* This is called by the update function  and loops through all of the
@@ -115,16 +118,16 @@ var Engine = (function(global) {
 				'images/grass-block.png', // Row 1 of 2 of grass
 				'images/grass-block.png' // Row 2 of 2 of grass
 			],
-			numRows = 6,
-			numCols = 5,
+			//numRows = 6,
+			//numCols = 5,
 			row, col;
 
 		/* Loop through the number of rows and columns we've defined above
 		* and, using the rowImages array, draw the correct image for that
 		* portion of the "grid"
 		*/
-		for (row = 0; row < numRows; row++) {
-			for (col = 0; col < numCols; col++) {
+		for (row = 0; row < GAME_ROWS; row++) {
+			for (col = 0; col < GAME_COLS; col++) {
 				/* The drawImage function of the canvas' context element
 				* requires 3 parameters: the image to draw, the x coordinate
 				* to start drawing and the y coordinate to start drawing.
@@ -160,7 +163,29 @@ var Engine = (function(global) {
 	* those sorts of things. It's only called once by the init() method.
 	*/
 	function reset() {
-		// noop
+		//take player back to starting position
+		player.col = 2;
+		player.row = 5;
+
+		//move enemies back to starting position
+		allEnemies.forEach(function(enemy) {
+			enemy.x = -150;
+			enemy.y = enemy.row * 83 - 20;
+		});
+
+		//set game_reset back to false so the game can proceed as normal again
+		game_reset = false;
+	}
+
+	function checkCollisions() {
+		allEnemies.forEach(function(enemy) {
+			if(enemy.row == player.row) {
+				if((enemy.x < player.x + PLAYER_WIDTH) &&
+					enemy.x + ENEMY_WIDTH > player.x) {
+					reset();
+				}
+			}
+		});
 	}
 
 	/* Go ahead and load all of the images we know we're going to need to

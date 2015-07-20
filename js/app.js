@@ -1,3 +1,12 @@
+//Define some constants
+var GAME_ROWS = 6;
+var GAME_COLS = 5;
+var PLAYER_WIDTH = 70;
+var ENEMY_WIDTH = 70;
+
+var game_reset = false;
+
+
 // Enemies our player must avoid
 var Enemy = function(row) {
 	// Variables applied to each of our instances go here,
@@ -36,8 +45,8 @@ var Player = function() {
 	this.sprite = 'images/char-boy.png';
 	
 	//Setting player's starting grid square
-	this.col = 2;
-	this.row = 5;
+	this.col = 0;
+	this.row = 0;
 
 	//Setting player's x and y based on col and row position
 	this.x = this.col * 101;
@@ -56,17 +65,20 @@ Player.prototype.render = function() {
 Player.prototype.handleInput = function(key) {
 	switch(key){
 		case 'left':
-			player.col = (player.col == 0) ? 0 : player.col - 1;
+			player.col = (player.col > 0) ? (player.col - 1) : 0;
 			break;
 		case 'right':
-			player.col = (player.col == 4) ? 4 : player.col + 1;
+			player.col = (player.col < (GAME_COLS - 1)) ? (player.col + 1) : (GAME_COLS - 1);
 			break;
 		case 'up':
-			player.row = (player.row == 0) ? 0 : player.row - 1;
-			console.log(player.row);
+			if(player.row == 1) {
+				game_reset = true;
+			} else if (player.row > 1) {
+				player.row--;
+			}
 			break;
 		case 'down':
-			player.row = (player.row == 5) ? 5 : player.row + 1;
+			player.row = (player.row < (GAME_ROWS - 1)) ? (player.row + 1) : (GAME_ROWS - 1);
 			break;
 	}
 }
