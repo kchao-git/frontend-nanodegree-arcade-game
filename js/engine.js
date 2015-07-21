@@ -144,9 +144,12 @@ var Engine = (function(global) {
 				ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
 			}
 		}
+
+		//Draw a rectangle box to serve as a background for the score text
 		ctx.fillStyle="#FFFFFF";
 		ctx.fillRect(0, canvas.height - 65, canvas.width, 30);
 
+		//Draw the player's score on screen
 		ctx.fillStyle="#000000";
 		ctx.font = "30px Verdana";
 		ctx.fillText("Score: " + player.score, 0, canvas.height - 40);
@@ -200,6 +203,7 @@ var Engine = (function(global) {
 	}
 
 	function checkCollisions() {
+		//Check gem "collision" and add appropriate score. Player collides with gem when they occupy the same row/col
 		allGems.forEach(function(gem) {
 			if(gem.active && gem.row == player.row && gem.col == player.col) {
 				gem.active = false;
@@ -219,6 +223,7 @@ var Engine = (function(global) {
 			}
 		});
 
+		//Check player collision with enemies based on hitbox defined by PLAYER_WIDTH and ENEMY_WIDTH
 		allEnemies.forEach(function(enemy) {
 			if(enemy.row == player.row) {
 				if((enemy.x < player.x + PLAYER_WIDTH) &&

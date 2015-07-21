@@ -63,15 +63,18 @@ var Player = function() {
 	this.score = 0;
 }
 
+//Player update function updates the player's x and y based on the current row/col position
 Player.prototype.update = function() {
 	this.x = this.col * 101;
 	this.y = this.row * 83 - 30;
 }
 
+//Player render function
 Player.prototype.render = function() {
 	ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 }
 
+//Player handleInput checks player's input and moves the player's poistion accordingly. If player reaches the top (water) then reset the game.
 Player.prototype.handleInput = function(key) {
 	switch(key){
 		case 'left':
@@ -94,26 +97,27 @@ Player.prototype.handleInput = function(key) {
 }
 
 //The Gem object takes four parameters:
-//col, row are the starting positions of the gem based on the grid of the game.
+//row is the starting row position of the gem based on the grid of the game. col will be randomized when the gem appears.
 //color indicates what color gem to spawn (blue, green or orange)
 //time is the interval the gem takes to spawn (in seconds).
-var Gem = function(col, row, color, time) {
+var Gem = function(row, color, time) {
 	//Initialize variables
-	this.col = col;
+	this.col = 0;
 	this.row = row;
 
 	this.x = this.col * 101 + 25;
 	this.y = this.row * 83 + 30;
 
-	//The time property will let the updater know when to move and activate the gem (if not already active)
+	//The time property will let the updater know when to activate the gem (if not already active)
 	this.time = time;
-	//timeElapsed keeps track of the dt that has passed to check against the time property (to either activate or deactivate a gem)
+	//timeElapsed keeps track of the dt that has passed to check against the time property and GEM_DEACTIVATE_TIME (to either activate or deactivate a gem)
 	this.timeElapsed = 0;
 
 	//Property used to determine score when picked up
 	this.color = color;
 
-	switch(color){
+	//Assign the appropriate sprite based on color property
+	switch(this.color){
 		case 'blue':
 			this.sprite = 'images/gem-blue.png';
 			break;
@@ -128,7 +132,7 @@ var Gem = function(col, row, color, time) {
 			break;
 	}
 
-	//Property used to only render the power up when it's active.
+	//Property used to render the gem only when it's active.
 	this.active = false;
 }
 
@@ -138,9 +142,12 @@ Gem.prototype.update = function(dt) {
 	
 	//if the gem is not active and the appropriate time has passed, activate the gem in a random column and reset the elapsed timer.
 	if(!this.active && this.time <= this.timeElapsed) {
+		//Update the position
 		this.col = Math.floor(Math.random() * 5);
 		this.x = this.col * 101 + 25;
+		
 		this.active = true;
+		
 		this.timeElapsed = 0;
 	}
 
@@ -169,9 +176,9 @@ var allEnemies = [
 ];
 
 var allGems = [
-	new Gem(4, 1, 'orange', 25),
-	new Gem(2, 2, 'green', 15),
-	new Gem(3, 3, 'blue', 5)
+	new Gem(1, 'orange', 25),
+	new Gem(2, 'green', 15),
+	new Gem(3, 'blue', 5)
 ];
 
 var player = new Player();

@@ -1,6 +1,13 @@
-frontend-nanodegree-arcade-game
-===============================
+Frogger Clone
+===================================
 
-Students should use this rubric: https://www.udacity.com/course/viewer#!/c-ud015/l-3072058665/m-3072588797
+How to play:
 
-for self-checking their submission.
+1. Download this repository.
+2. Load index.html in a browser of your choice (latest versions of Chrome or Firefox recommended).
+3. Enjoy! =)
+
+Gameplay:
+-Move your player with Up, Left, Down and Right arrow keys.
+-Avoid ladybugs and water.
+-Collect gems for points! (Blue: 5 points, Green: 20 points, Orange: 30 points)
