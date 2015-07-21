@@ -1,3 +1,5 @@
+'use strict';
+
 //Define some constants
 var GAME_ROWS = 6;
 var GAME_COLS = 5;
@@ -78,20 +80,20 @@ Player.prototype.render = function() {
 Player.prototype.handleInput = function(key) {
 	switch(key){
 		case 'left':
-			player.col = (player.col > 0) ? (player.col - 1) : 0;
+			this.col = (this.col > 0) ? (this.col - 1) : 0;
 			break;
 		case 'right':
-			player.col = (player.col < (GAME_COLS - 1)) ? (player.col + 1) : (GAME_COLS - 1);
+			this.col = (this.col < (GAME_COLS - 1)) ? (this.col + 1) : (GAME_COLS - 1);
 			break;
 		case 'up':
-			if(player.row == 1) {
+			if(this.row == 1) {
 				game_reset = true;
-			} else if (player.row > 1) {
-				player.row--;
+			} else if (this.row > 1) {
+				this.row--;
 			}
 			break;
 		case 'down':
-			player.row = (player.row < (GAME_ROWS - 1)) ? (player.row + 1) : (GAME_ROWS - 1);
+			this.row = (this.row < (GAME_ROWS - 1)) ? (this.row + 1) : (GAME_ROWS - 1);
 			break;
 	}
 };
