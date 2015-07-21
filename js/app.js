@@ -24,7 +24,7 @@ var Enemy = function(row, spd, start) {
 	this.y = this.row * 83 - 20;
 
 	this.speed = spd;
-}
+};
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -37,12 +37,12 @@ Enemy.prototype.update = function(dt) {
 	//If it hasn't, move the enemy forward. Otherwise, reset its position back to the left side.
 	this.x = (this.x < 505) ? this.x + (this.speed * dt) : this.startPosX;
 
-}
+};
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
 	ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-}
+};
 
 // Now write your own player class
 // This class requires an update(), render() and
@@ -61,18 +61,18 @@ var Player = function() {
 
 	//Set the player's score
 	this.score = 0;
-}
+};
 
 //Player update function updates the player's x and y based on the current row/col position
 Player.prototype.update = function() {
 	this.x = this.col * 101;
 	this.y = this.row * 83 - 30;
-}
+};
 
 //Player render function
 Player.prototype.render = function() {
 	ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-}
+};
 
 //Player handleInput checks player's input and moves the player's poistion accordingly. If player reaches the top (water) then reset the game.
 Player.prototype.handleInput = function(key) {
@@ -94,7 +94,7 @@ Player.prototype.handleInput = function(key) {
 			player.row = (player.row < (GAME_ROWS - 1)) ? (player.row + 1) : (GAME_ROWS - 1);
 			break;
 	}
-}
+};
 
 //The Gem object takes four parameters:
 //row is the starting row position of the gem based on the grid of the game. col will be randomized when the gem appears.
@@ -134,7 +134,7 @@ var Gem = function(row, color, time) {
 
 	//Property used to render the gem only when it's active.
 	this.active = false;
-}
+};
 
 //Gem update checks the time elapsed since last active toggle and checks the appropriate variables to either activate or deactivate the gem.
 Gem.prototype.update = function(dt) {
@@ -156,14 +156,14 @@ Gem.prototype.update = function(dt) {
 		this.active = false;
 		this.timeElapsed = 0;
 	}
-}
+};
 
 Gem.prototype.render = function() {
 	if(this.active)
 	{
 		ctx.drawImage(Resources.get(this.sprite), this.x, this.y, 50, 85);
 	}
-}
+};
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies

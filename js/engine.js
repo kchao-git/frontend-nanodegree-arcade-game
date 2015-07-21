@@ -57,7 +57,7 @@ var Engine = (function(global) {
 		* function again as soon as the browser is able to draw another frame.
 		*/
 		win.requestAnimationFrame(main);
-	};
+	}
 
 	/* This function does some initial setup that should only occur once,
 	* particularly setting the lastTime variable that is required for the
@@ -180,7 +180,7 @@ var Engine = (function(global) {
 	* handle game reset states - maybe a new game menu or a game over screen
 	* those sorts of things. It's only called once by the init() method.
 	*/
-	function reset() {
+	var reset = function() {
 		//take player back to starting position
 		player.col = 2;
 		player.row = 5;
@@ -200,9 +200,9 @@ var Engine = (function(global) {
 
 		//set game_reset back to false so the game can proceed as normal again
 		game_reset = false;
-	}
+	};
 
-	function checkCollisions() {
+	var checkCollisions = function() {
 		//Check gem "collision" and add appropriate score. Player collides with gem when they occupy the same row/col
 		allGems.forEach(function(gem) {
 			if(gem.active && gem.row == player.row && gem.col == player.col) {
@@ -232,7 +232,7 @@ var Engine = (function(global) {
 				}
 			}
 		});
-	}
+	};
 
 	/* Go ahead and load all of the images we know we're going to need to
 	* draw our game level. Then set init as the callback method, so that when
