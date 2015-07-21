@@ -26,7 +26,7 @@ var Engine = (function(global) {
 		lastTime;
 
 	canvas.width = 505;
-	canvas.height = 606;
+	canvas.height = 656;
 	doc.body.appendChild(canvas);
 
 	/* This function serves as the kickoff point for the game loop itself
@@ -97,7 +97,13 @@ var Engine = (function(global) {
 		allEnemies.forEach(function(enemy) {
 			enemy.update(dt);
 		});
+
+		allGems.forEach(function(gem) {
+			gem.update(dt);
+		});
+
 		player.update();
+
 	}
 
 	/* This function initially draws the "game level", it will then call
@@ -138,7 +144,12 @@ var Engine = (function(global) {
 				ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
 			}
 		}
+		ctx.fillStyle="#FFFFFF";
+		ctx.fillRect(0, canvas.height - 65, canvas.width, 30);
 
+		ctx.fillStyle="#000000";
+		ctx.font = "30px Verdana";
+		ctx.fillText("Score: " + player.score, 0, canvas.height - 40);
 
 		renderEntities();
 	}
@@ -151,10 +162,14 @@ var Engine = (function(global) {
 		/* Loop through all of the objects within the allEnemies array and call
 		* the render function you have defined.
 		*/
+		allGems.forEach(function(gem) {
+			gem.render();
+		});
+
 		allEnemies.forEach(function(enemy) {
 			enemy.render();
 		});
-
+		
 		player.render();
 	}
 
@@ -166,6 +181,7 @@ var Engine = (function(global) {
 		//take player back to starting position
 		player.col = 2;
 		player.row = 5;
+		player.score = 0;
 
 		//move enemies back to starting position
 		allEnemies.forEach(function(enemy) {
@@ -173,11 +189,36 @@ var Engine = (function(global) {
 			enemy.y = enemy.row * 83 - 20;
 		});
 
+		//remove all gems and set their timers back to 0
+		allGems.forEach(function(gem) {
+			gem.active = false;
+			gem.timeElapsed = 0;
+		});
+
 		//set game_reset back to false so the game can proceed as normal again
 		game_reset = false;
 	}
 
 	function checkCollisions() {
+		allGems.forEach(function(gem) {
+			if(gem.active && gem.row == player.row && gem.col == player.col) {
+				gem.active = false;
+				switch(gem.color){
+					case 'blue':
+						player.score += 5;
+						break;
+					case 'green':
+						player.score += 20;
+						break;
+					case 'orange':
+						player.score += 30;
+						break;
+					default:
+						break;
+				}
+			}
+		});
+
 		allEnemies.forEach(function(enemy) {
 			if(enemy.row == player.row) {
 				if((enemy.x < player.x + PLAYER_WIDTH) &&
@@ -197,7 +238,10 @@ var Engine = (function(global) {
 		'images/water-block.png',
 		'images/grass-block.png',
 		'images/enemy-bug.png',
-		'images/char-boy.png'
+		'images/char-boy.png',
+		'images/gem-blue.png',
+		'images/gem-green.png',
+		'images/gem-orange.png'
 	]);
 	Resources.onReady(init);
 

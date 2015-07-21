@@ -3,6 +3,7 @@ var GAME_ROWS = 6;
 var GAME_COLS = 5;
 var PLAYER_WIDTH = 70;
 var ENEMY_WIDTH = 70;
+var GEM_DEACTIVE_TIME = 3;
 
 var game_reset = false;
 
@@ -57,6 +58,9 @@ var Player = function() {
 	//Setting player's x and y based on col and row position
 	this.x = this.col * 101;
 	this.y = this.row * 83 - 30;
+
+	//Set the player's score
+	this.score = 0;
 }
 
 Player.prototype.update = function() {
@@ -89,6 +93,71 @@ Player.prototype.handleInput = function(key) {
 	}
 }
 
+//The Gem object takes four parameters:
+//col, row are the starting positions of the gem based on the grid of the game.
+//color indicates what color gem to spawn (blue, green or orange)
+//time is the interval the gem takes to spawn (in seconds).
+var Gem = function(col, row, color, time) {
+	//Initialize variables
+	this.col = col;
+	this.row = row;
+
+	this.x = this.col * 101 + 25;
+	this.y = this.row * 83 + 30;
+
+	//The time property will let the updater know when to move and activate the gem (if not already active)
+	this.time = time;
+	//timeElapsed keeps track of the dt that has passed to check against the time property (to either activate or deactivate a gem)
+	this.timeElapsed = 0;
+
+	//Property used to determine score when picked up
+	this.color = color;
+
+	switch(color){
+		case 'blue':
+			this.sprite = 'images/gem-blue.png';
+			break;
+		case 'green':
+			this.sprite = 'images/gem-green.png';
+			break;
+		case 'orange':
+			this.sprite = 'images/gem-orange.png';
+			break;
+		default:
+			this.sprite = 'images/gem-blue.png';
+			break;
+	}
+
+	//Property used to only render the power up when it's active.
+	this.active = false;
+}
+
+//Gem update checks the time elapsed since last active toggle and checks the appropriate variables to either activate or deactivate the gem.
+Gem.prototype.update = function(dt) {
+	this.timeElapsed += dt;
+	
+	//if the gem is not active and the appropriate time has passed, activate the gem in a random column and reset the elapsed timer.
+	if(!this.active && this.time <= this.timeElapsed) {
+		this.col = Math.floor(Math.random() * 5);
+		this.x = this.col * 101 + 25;
+		this.active = true;
+		this.timeElapsed = 0;
+	}
+
+	//if the gem is active, have it disappear after enough time has passed.
+	if(this.active && GEM_DEACTIVE_TIME <= this.timeElapsed) {
+		this.active = false;
+		this.timeElapsed = 0;
+	}
+}
+
+Gem.prototype.render = function() {
+	if(this.active)
+	{
+		ctx.drawImage(Resources.get(this.sprite), this.x, this.y, 50, 85);
+	}
+}
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
@@ -98,7 +167,16 @@ var allEnemies = [
 	new Enemy(2, 200, -150),
 	new Enemy(3, 100, -150)
 ];
+
+var allGems = [
+	new Gem(4, 1, 'orange', 25),
+	new Gem(2, 2, 'green', 15),
+	new Gem(3, 3, 'blue', 5)
+];
+
 var player = new Player();
+
+
 
 
 // This listens for key presses and sends the keys to your
